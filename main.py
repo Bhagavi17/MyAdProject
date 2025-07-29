@@ -1,23 +1,29 @@
 import streamlit as st
 from scrape import scrape_website, extract_body_content, clean_body_content, split_dom_content
 
-st.set_page_config(page_title="AI Webscraper", layout="wide")
-st.title("🌐 AI Website Scraper")
-st.write("Enter a website URL to scrape its content:")
+st.set_page_config(page_title="AI Web Scraper", layout="wide")
 
-url = st.text_input("Website URL", placeholder="https://example.com")
+st.title("🔍 AI Website Content Scraper")
+st.markdown("Enter a website URL below to scrape and extract its main content.")
 
-if url and st.button("Scrape Website"):
-    try:
-        raw_html = scrape_website(url)
-        body = extract_body_content(raw_html)
-        cleaned = clean_body_content(body)
-        parts = split_dom_content(cleaned)
+# Input form
+url = st.text_input("🌐 Enter URL", placeholder="https://example.com")
 
-        st.success("✅ Website scraped successfully!")
-        for i, part in enumerate(parts):
-            with st.expander(f"📄 Content Block {i+1}", expanded=(i == 0)):
-                st.text(part)
+if st.button("Scrape"):
+    if not url:
+        st.error("Please enter a URL.")
+    else:
+        try:
+            with st.spinner("Scraping website..."):
+                html = scrape_website(url)
+                body = extract_body_content(html)
+                cleaned = clean_body_content(body)
+                split_parts = split_dom_content(cleaned)
 
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
+            st.success("✅ Scraping complete!")
+            st.subheader("📄 Extracted Content:")
+            for i, part in enumerate(split_parts):
+                st.text_area(f"Part {i + 1}", part, height=300)
+
+        except Exception as e:
+            st.error(f"❌ An error occurred: {e}")
