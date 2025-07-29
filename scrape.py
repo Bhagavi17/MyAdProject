@@ -4,14 +4,15 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
 def scrape_website(url):
-    options = Options()
-    options.add_argument('--headless')          # Run Chrome in headless mode
-    options.add_argument('--no-sandbox')        # Bypass OS security model
-    options.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # ✅ Update path to your chromedriver if it's placed locally
-    driver = webdriver.Chrome(service=Service('./chromedriver.exe'), options=options)
+    # Path to local ChromeDriver
+    service = Service(executable_path="./chromedriver.exe")  # Ensure it's in same folder
 
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     html = driver.page_source
     driver.quit()
@@ -19,8 +20,7 @@ def scrape_website(url):
 
 def extract_body_content(html):
     soup = BeautifulSoup(html, "html.parser")
-    body_content = soup.body
-    return str(body_content) if body_content else ""
+    return str(soup.body) if soup.body else ""
 
 def clean_body_content(body):
     soup = BeautifulSoup(body, "html.parser")
