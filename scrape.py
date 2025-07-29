@@ -1,3 +1,4 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -9,11 +10,10 @@ def scrape_website(url):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # Path to local ChromeDriver
-   service = Service(executable_path=os.path.abspath("chromedriver.exe"))
- # Ensure it's in same folder
-
+    # ✅ Path to local ChromeDriver
+    service = Service(executable_path=os.path.abspath("chromedriver.exe"))  # Ensure chromedriver.exe is in the same folder
     driver = webdriver.Chrome(service=service, options=chrome_options)
+
     driver.get(url)
     html = driver.page_source
     driver.quit()
