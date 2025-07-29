@@ -5,13 +5,13 @@ from bs4 import BeautifulSoup
 
 def scrape_website(url):
     options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--headless')          # Run Chrome in headless mode
+    options.add_argument('--no-sandbox')        # Bypass OS security model
+    options.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
 
-    # Make sure chromedriver is in the same folder or specify the path
-    driver = webdriver.Chrome(service=Service('chromedriver'), options=options)
-    
+    # ✅ Update path to your chromedriver if it's placed locally
+    driver = webdriver.Chrome(service=Service('./chromedriver.exe'), options=options)
+
     driver.get(url)
     html = driver.page_source
     driver.quit()
@@ -24,8 +24,8 @@ def extract_body_content(html):
 
 def clean_body_content(body):
     soup = BeautifulSoup(body, "html.parser")
-    for script_or_style in soup(["script", "style"]):
-        script_or_style.decompose()
+    for tag in soup(["script", "style"]):
+        tag.decompose()
     cleaned = soup.get_text(separator="\n")
     return "\n".join(line.strip() for line in cleaned.splitlines() if line.strip())
 
