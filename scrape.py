@@ -10,7 +10,8 @@ def scrape_website(url):
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     # Path to local ChromeDriver
-    service = Service(executable_path="./chromedriver.exe")  # Ensure it's in same folder
+   service = Service(executable_path=os.path.abspath("chromedriver.exe"))
+ # Ensure it's in same folder
 
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
